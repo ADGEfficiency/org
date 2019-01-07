@@ -1,7 +1,7 @@
 #!/bin/bash
 
 add_project() {
-	jq -n --arg name $1 --arg priority $2 \
+	jq -n -c --arg name $1 --arg priority $2 \
 	'{"name":"\($name)", "priority":"\($priority)"}' >> projects.json
 }
 
@@ -22,9 +22,7 @@ iterate_project_list() {
 
 add_task() {
 	arr=$(iterate_project_list $@)
-	echo $arr
-
-	jq -n --arg name $1 --arg cost $2 --arg projects "$arr" \
+	jq -n -c --arg name $1 --arg cost $2 --arg projects "$arr" \
 	'{"name":"\($name)", "cost":"\($cost)", "projects": ($projects|split(" "))}' >> tasks.json
 }
 
@@ -46,7 +44,9 @@ reset
 
 add_project "test_project" 10
 add_task "start" 5 "test_project" "actual_project"
+add_task "end" 2 "test_project" "actual_project"
 
 cat projects.json
+echo ""
 cat tasks.json
 
