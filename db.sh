@@ -42,9 +42,12 @@ stats() {
 
 reset
 
-add_project "test_project" 10
-add_task "start" 5 "test_project" "actual_project"
-add_task "end" 2 "test_project" "actual_project"
+add_project "low_priority" 5
+add_project "high_priority" 10
+add_task "clean_room" 1 "low_priority" "high_priority"
+add_task "water_plants" 2 "low_priority"
+add_task "start_company" 5 "high_priority"
+add_task "build_product" 5 "high_priority"
 
 cat projects.json
 echo ""
