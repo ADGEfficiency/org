@@ -1,2 +1,5 @@
 projects.json
 tasks.json
+__pycache__
+*.swp
+*.pyc
