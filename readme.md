@@ -1,3 +1,10 @@
+## Setup
+
+Add to your `.bashrc` or `.bash_profile`
+`source path/to/org/src/org.sh`
+
+
+
 TODO
 
 - help / about (same as for bob)

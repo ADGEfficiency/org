@@ -10,7 +10,6 @@ def show_project(tasks, projects, project_name):
     sorted_tasks = sort_tasks(project_tasks, key='cost', reverse=False)
 
     print('{} {} tasks'.format(len(sorted_tasks), project_name))
-
     print('------------')
 
     for task_tuple in sorted_tasks:

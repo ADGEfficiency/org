@@ -1,5 +1,6 @@
 """ Calculates task densities using .json data """
 import json
+import os
 
 
 def load_json(file_name):
@@ -12,8 +13,10 @@ def setup():
         tasks (list of dicts)
         projects (dictionary)
     """
-    tasks = load_json('./data/tasks.json')
-    projects = load_json('./data/projects.json')
+
+    org_data_home = os.environ['ORG_DATA_HOME']
+    tasks = load_json('{}/tasks.json'.format(org_data_home))
+    projects = load_json('{}/projects.json'.format(org_data_home))
 
     projects = {project['name']: project for project in projects}
     for name, info in projects.items():
@@ -52,8 +55,13 @@ def organize(tasks, projects):
     updated_tasks = update_densities(tasks, projects)
     sorted_tasks = sort_tasks(updated_tasks)
 
+    print('sorted tasks')
+    print('------------')
+
     for task in sorted_tasks:
-        print(task[1]['name'], task[1]['density'])
+        print('{:.1f} {} {}'.format(
+            task[1]['density'], task[1]['name'], task[1]['projects']
+        ))
     return sorted_tasks
 
 

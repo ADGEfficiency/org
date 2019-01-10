@@ -2,6 +2,7 @@
 
 ORG_HOME=~/git/org
 ORG_DATA_HOME=$ORG_HOME/data
+export ORG_DATA_HOME
 
 org-add-project() {
 	jq -n -c --arg name $1 --arg priority $2 \
