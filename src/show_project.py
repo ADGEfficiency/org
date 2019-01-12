@@ -1,6 +1,6 @@
 """ shows infomation for a single project """
 import argparse
-from org import setup, sort_tasks
+from organize import setup, sort_tasks
 
 
 def show_project(tasks, projects, project_name):
@@ -9,6 +9,7 @@ def show_project(tasks, projects, project_name):
 
     sorted_tasks = sort_tasks(project_tasks, key='cost', reverse=False)
 
+    print('')
     print('{} {} tasks'.format(len(sorted_tasks), project_name))
     print('------------')
 
@@ -16,6 +17,7 @@ def show_project(tasks, projects, project_name):
         print('{} {}'.format(
             task_tuple[1]['name'], task_tuple[1]['cost']
         ))
+    print('')
 
 
 if __name__ == '__main__':

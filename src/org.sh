@@ -1,11 +1,12 @@
 #!/bin/bash
 
 ORG_HOME=~/git/org
+ORG_SRC_HOME=~/git/org/src
 ORG_DATA_HOME=$ORG_HOME/data
 export ORG_DATA_HOME
 
-org-add-project() {
-	jq -n -c --arg name $1 --arg priority $2 \
+add-project() {
+	jq -n -c --arg name $2 --arg priority $3 \
 	'{"name":"\($name)", "priority":"\($priority).0"}' >> $ORG_DATA_HOME/projects.json
 }
 
@@ -14,20 +15,30 @@ iterate_project_list() {
 	COUNT=0
 	for line in "$@"; do
 		COUNT=$(( COUNT + 1 ))
-		if [[ $COUNT == 3 ]]; then
+		if [[ $COUNT == 4 ]]; then
 			PROJECTS+="$line"
 
-		elif [[ $COUNT > 3 ]]; then
+		elif [[ $COUNT > 4 ]]; then
 			PROJECTS+=" $line"
 		fi
 	done
 	echo $PROJECTS;
 }
 
-org-add_task() {
+add-task() {
 	arr=$(iterate_project_list $@)
-	jq -n -c --arg name $1 --arg cost $2 --arg projects "$arr" \
+	jq -n -c --arg name $2 --arg cost $3 --arg projects "$arr" \
 	'{"name":"\($name)", "cost":"\($cost)", "projects": ($projects|split(" "))}' >> $ORG_DATA_HOME/tasks.json
+}
+
+org-add() {
+  if [[ $1 == "project" ]]; then
+    add-project $@
+  fi
+
+  if [[ $1 == "task" ]]; then
+    add-task $@
+  fi
 }
 
 org-reset() {
@@ -46,7 +57,7 @@ org-stats() {
 
 org-show() {
 	if [[ -z $1 ]]; then
-		python organize.py | less
+		python $ORG_SRC_HOME/organize.py | less
 	fi
 	if [[ $1 == "projects" ]]; then
 		cat $ORG_DATA_HOME/projects.json
@@ -57,7 +68,7 @@ org-show() {
 	fi
 
 	if [[ $1 == "project" ]]; then
-		python show_project.py $2 | less
+		python $ORG_SRC_HOME/show_project.py $2
 	fi
 
 }
