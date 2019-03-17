@@ -2,10 +2,10 @@ Simple task manager built in Bash & Python.
 
 ## Setup
 
-Add to your `.bashrc` or `.bash_profile`
+Add to your `.bashrc` or `.bash_profile` the location of the source and where you to keep task and project data (below I use Google Drive):
 
 ```bash
-export ORG_HOME="/Users/adam/git/org"
+export ORG_HOME="/Users/adam/org"
 export ORG_DATA_HOME="/Users/adam/Google\ Drive/org-backup"
 source $ORG_HOME/src/org.sh
 
