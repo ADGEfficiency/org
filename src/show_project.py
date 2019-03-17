@@ -1,23 +1,37 @@
 """ shows infomation for a single project """
 import argparse
-from organize import setup, sort_tasks
+import json
+import os
+
+def load_json(file_name):
+    return [json.loads(line) for line in open(file_name, 'r')]
+
+
+def setup():
+    """
+    returns
+        tasks (list of dicts)
+        projects (dictionary)
+    """
+
+    org_data_home = os.environ['ORG_DATA_HOME']
+    tasks = load_json('{}/tasks.json'.format(org_data_home))
+    projects = load_json('{}/projects.json'.format(org_data_home))
+
+    return tasks, projects
 
 
 def show_project(tasks, projects, project_name):
-    project_tasks = {name: info for name, info in tasks.items()
-                     if project_name in info['projects']}
-
-    sorted_tasks = sort_tasks(project_tasks, key='cost', reverse=False)
+    project_tasks = {task['name']: task for task in tasks
+                     if project_name in task['projects']}
+    import pdb; pdb.set_trace()
 
     print('')
-    print('{} {} tasks'.format(len(sorted_tasks), project_name))
+    print('{} {} tasks'.format(len(project_tasks), project_name))
     print('------------')
 
-    for task_tuple in sorted_tasks:
-        print('{} {}'.format(
-            task_tuple[1]['name'], task_tuple[1]['cost']
-        ))
-    print('')
+    for task, task_info in project_tasks.items():
+        print(task, task_info['projects'])
 
 
 if __name__ == '__main__':
