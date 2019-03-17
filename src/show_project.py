@@ -24,7 +24,6 @@ def setup():
 def show_project(tasks, projects, project_name):
     project_tasks = {task['name']: task for task in tasks
                      if project_name in task['projects']}
-    import pdb; pdb.set_trace()
 
     print('')
     print('{} {} tasks'.format(len(project_tasks), project_name))
