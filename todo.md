@@ -9,3 +9,4 @@ TODO
 
 - pipe stuff into less
 
+help

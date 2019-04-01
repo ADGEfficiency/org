@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+#  find all directories matching name
+#  find ~ -type d -name "tempus" -print
+#  issue is having multiple dirs returned
+
+PROJECT_DIR=$HOME/git
+ALT_PROJECT_DIR=$HOME/git/personal/projects
+
+org-add() {
+	TASK=$1
+	PROJECT=$2
+
+	FILENAME=$PROJECT_DIR/$PROJECT/todo.md
+	ALT_FILENAME=$ALT_PROJECT_DIR/$PROJECT/todo.md
+
+	if [[ -f $FILENAME ]]; then
+		echo "saving to $FILENAME"
+		echo $TASK >> $FILENAME
+
+	elif [[ -f $ALT_FILENAME ]]; then
+		echo "saving to $ALT_FILENAME"
+		echo "$TASK" >> $ALT_FILENAME
+
+  else
+    echo "no todo.md for $PROJECT"
+    mkdir $ALT_PROJECT_DIR/$PROJECT
+    touch $ALT_FILENAME
+
+		echo "saving to $ALT_FILENAME"
+		echo "$TASK" >> $ALT_FILENAME
+ fi
+
+    echo ""
+    echo "$PROJECT tasks"
+    echo "-----"
+    cat $FILENAME
+    cat $ALT_FILENAME
+    echo ""
+
+}
+
+org-show() {
+  PROJECT=$1
+	FILENAME=$PROJECT_DIR/$PROJECT/todo.md
+	if [[ -f $FILENAME ]]; then
+		cat $FILENAME
+	fi
+
+	FILENAME=$ALT_PROJECT_DIR/$PROJECT/todo.md
+	if [[ -f $FILENAME ]]; then
+		cat $FILENAME
+	fi
+}
+
+org-show-projects() {
+  #  look for all todo.md files in home
+  PROJECTS=$(find ~ -name "todo.md" | awk -F "/" '{print $(NF-1)}' | sort)
+  echo $PROJECTS
+}
+
+
