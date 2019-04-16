@@ -6,9 +6,8 @@
 
 #  look for notes file as $PROJECT.md - anywhere
 
-"""
-Issue = I can't add multiple projects
-"""
+#  not being able to add multiple projects in org_add
+#
 
 PROJECT_DIR=$HOME/git
 ALT_PROJECT_DIR=$HOME/git/personal/projects
@@ -17,38 +16,37 @@ org-add() {
 	TASK=$1
 	PROJECT=$2
 
-	FILENAME=$PROJECT_DIR/$PROJECT/todo.md
-	ALT_FILENAME=$ALT_PROJECT_DIR/$PROJECT/todo.md
-	ALT1_FILENAME=$ALT_PROJECT_DIR/mono/$PROJECT/todo.md
+  declare -a arr=(
+  "$PROJECT_DIR/$PROJECT/todo.md"
+  "$ALT_PROJECT_DIR/mono/$PROJECT/todo.md"
+  "$ALT_PROJECT_DIR/$PROJECT/todo.md"
+  )
 
-	if [[ -f $FILENAME ]]; then
-		echo "saving to $FILENAME"
-		echo $TASK >> $FILENAME
+  WROTEFILE="false"
+  for FILENAME in "${arr[@]}"
+    do
+      #   echo "$i"
+    if [[ ! -e "$FILENAME" ]]; then
+      # echo "$FILENAME not found"
+      :  # pass
+    else
+      echo "found $FILENAME"
+      echo $TASK >> $FILENAME
+  fi
+  done
 
-	elif [[ -f $ALT_FILENAME ]]; then
-		echo "saving to $ALT_FILENAME"
-		echo "$TASK" >> $ALT_FILENAME
-
-	elif [[ -f $ALT1_FILENAME ]]; then
-		echo "saving to $ALT1_FILENAME"
-		echo "$TASK" >> $ALT1_FILENAME
-
-  else
-    echo "no todo.md for $PROJECT"
-    mkdir $ALT_PROJECT_DIR/$PROJECT
-    touch $ALT_FILENAME
-
-		echo "saving to $ALT_FILENAME"
-		echo "$TASK" >> $ALT_FILENAME
- fi
-
-    echo ""
-    echo "$PROJECT tasks"
-    echo "-----"
-    cat $FILENAME
-    cat $ALT_FILENAME
-    echo ""
-
+  if [[ "$WROTEFILE" == "false" ]]; then
+    FIRST="${arr[2]}"
+    echo "no todo found - making at $FIRST"
+    touch $FIRST
+    echo $TASK >> $FIRST
+  fi
+  echo ""
+  echo "$PROJECT tasks"
+  echo "-----"
+  cat $FILENAME
+  echo ""
+  WROTEFILE="true"
 }
 
 org-show() {
@@ -81,3 +79,5 @@ org-show-projects() {
   echo "-----"
   echo "$PROJECTS" | tr " " "\n"
 }
+
+org-add 'test' test
