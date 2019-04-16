@@ -4,6 +4,12 @@
 #  find ~ -type d -name "tempus" -print
 #  issue is having multiple dirs returned
 
+#  look for notes file as $PROJECT.md - anywhere
+
+"""
+Issue = I can't add multiple projects
+"""
+
 PROJECT_DIR=$HOME/git
 ALT_PROJECT_DIR=$HOME/git/personal/projects
 
@@ -13,6 +19,7 @@ org-add() {
 
 	FILENAME=$PROJECT_DIR/$PROJECT/todo.md
 	ALT_FILENAME=$ALT_PROJECT_DIR/$PROJECT/todo.md
+	ALT1_FILENAME=$ALT_PROJECT_DIR/mono/$PROJECT/todo.md
 
 	if [[ -f $FILENAME ]]; then
 		echo "saving to $FILENAME"
@@ -21,6 +28,10 @@ org-add() {
 	elif [[ -f $ALT_FILENAME ]]; then
 		echo "saving to $ALT_FILENAME"
 		echo "$TASK" >> $ALT_FILENAME
+
+	elif [[ -f $ALT1_FILENAME ]]; then
+		echo "saving to $ALT1_FILENAME"
+		echo "$TASK" >> $ALT1_FILENAME
 
   else
     echo "no todo.md for $PROJECT"
@@ -41,6 +52,14 @@ org-add() {
 }
 
 org-show() {
+	if [[ -z "$1" ]]; then
+    org-show-projects
+  else
+    org-show-project
+fi
+}
+
+org-show-project() {
   PROJECT=$1
 	FILENAME=$PROJECT_DIR/$PROJECT/todo.md
 	if [[ -f $FILENAME ]]; then
@@ -55,8 +74,10 @@ org-show() {
 
 org-show-projects() {
   #  look for all todo.md files in home
+  echo "finding project todo.md's ..."
   PROJECTS=$(find ~ -name "todo.md" | awk -F "/" '{print $(NF-1)}' | sort)
-  echo $PROJECTS
+  echo " "
+  echo "Projects"
+  echo "-----"
+  echo "$PROJECTS" | tr " " "\n"
 }
-
-

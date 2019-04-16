@@ -10,3 +10,4 @@ TODO
 - pipe stuff into less
 
 help
+add multiple projects at once (one task to multiple projects, into all their todo.md)
