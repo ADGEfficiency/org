@@ -9,44 +9,52 @@
 #  not being able to add multiple projects in org_add
 #
 
-PROJECT_DIR=$HOME/git
-ALT_PROJECT_DIR=$HOME/git/personal/projects
-
 org-add() {
+	TASK=$1
+  shift
+  for PROJECT in "$@"
+  do
+    org-add-single-project "$TASK" "$PROJECT"
+   done
+}
+
+
+org-add-single-project() {
 	TASK=$1
 	PROJECT=$2
 
+  #  hardcoded!
   declare -a arr=(
-  "$PROJECT_DIR/$PROJECT/todo.md"
-  "$ALT_PROJECT_DIR/mono/$PROJECT/todo.md"
-  "$ALT_PROJECT_DIR/$PROJECT/todo.md"
+  "$HOME/git/$PROJECT/todo.md"
+  "$HOME/git/personal/projects/mono/$PROJECT/todo.md"
+  "$HOME/git/personal/projects/$PROJECT/todo.md"
+  "$HOME/git/personal/projects/${PROJECT}.md"
   )
 
   WROTEFILE="false"
   for FILENAME in "${arr[@]}"
     do
-      #   echo "$i"
-    if [[ ! -e "$FILENAME" ]]; then
-      # echo "$FILENAME not found"
+    if [[ ! -f "$FILENAME" ]]; then
       :  # pass
     else
       echo "found $FILENAME"
       echo $TASK >> $FILENAME
+      WROTEFILE="true"
+      break
   fi
   done
 
   if [[ "$WROTEFILE" == "false" ]]; then
-    FIRST="${arr[2]}"
-    echo "no todo found - making at $FIRST"
-    touch $FIRST
-    echo $TASK >> $FIRST
+    echo "no todo found - making at $FILENAME"
+    touch $FILENAME
+    echo $TASK >> $FILENAME
+    WROTEFILE="true"
   fi
   echo ""
-  echo "$PROJECT tasks"
+  echo "$PROJECT tasks - $FILENAME"
   echo "-----"
   cat $FILENAME
   echo ""
-  WROTEFILE="true"
 }
 
 org-show() {
@@ -79,5 +87,3 @@ org-show-projects() {
   echo "-----"
   echo "$PROJECTS" | tr " " "\n"
 }
-
-org-add 'test' test
