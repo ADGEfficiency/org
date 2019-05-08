@@ -7,7 +7,6 @@
 #  look for notes file as $PROJECT.md - anywhere
 
 #  not being able to add multiple projects in org_add
-#
 
 org-add() {
 	TASK=$1
@@ -18,7 +17,6 @@ org-add() {
    done
 }
 
-
 org-add-single-project() {
 	TASK=$1
 	PROJECT=$2
@@ -26,7 +24,7 @@ org-add-single-project() {
   #  hardcoded!
   declare -a arr=(
   "$HOME/git/$PROJECT/todo.md"
-  "$HOME/git/personal/projects/mono/$PROJECT/todo.md"
+  "$HOME/git/mono/$PROJECT/todo.md"
   "$HOME/git/personal/projects/$PROJECT/todo.md"
   "$HOME/git/personal/projects/${PROJECT}.md"
   )
@@ -61,27 +59,36 @@ org-show() {
 	if [[ -z "$1" ]]; then
     org-show-projects
   else
-    org-show-project
+    org-show-project $1
 fi
 }
 
 org-show-project() {
-  PROJECT=$1
-	FILENAME=$PROJECT_DIR/$PROJECT/todo.md
-	if [[ -f $FILENAME ]]; then
-		cat $FILENAME
-	fi
+	PROJECT=$1
 
-	FILENAME=$ALT_PROJECT_DIR/$PROJECT/todo.md
-	if [[ -f $FILENAME ]]; then
-		cat $FILENAME
-	fi
+  declare -a arr=(
+  "$HOME/git/$PROJECT/todo.md"
+  "$HOME/git/mono/$PROJECT/todo.md"
+  "$HOME/git/personal/projects/$PROJECT/todo.md"
+  "$HOME/git/personal/projects/${PROJECT}.md"
+  )
+
+  for FILENAME in "${arr[@]}"
+    do
+    if [[ ! -f "$FILENAME" ]]; then
+      :  # pass
+    else
+      cat $FILENAME
+  fi
+  done
+
+
 }
 
 org-show-projects() {
   #  look for all todo.md files in home
   echo "finding project todo.md's ..."
-  PROJECTS=$(find ~ -name "todo.md" | awk -F "/" '{print $(NF-1)}' | sort)
+  PROJECTS=$(find /Users/adam/git -name "todo.md" | awk -F "/" '{print $(NF-1)}' | sort)
   echo " "
   echo "Projects"
   echo "-----"
