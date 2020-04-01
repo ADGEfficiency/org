@@ -2,8 +2,9 @@
 
 My simple bash based task manager.
 
-Projects are managed by `todo.txt` files that can exist anywhere.  `org` provides two functions
-- finding the `todo.txt` for a given project
+Projects are managed by `todo.txt` files that can exist anywhere.  `org` provides two functions:
+
+Finding the `todo.txt` for a given project
 
 ```bash
 $ org-find personal
