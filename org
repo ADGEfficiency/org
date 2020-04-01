@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-#  find all directories matching name
-#  find ~ -type d -name "tempus" -print
-#  issue is having multiple dirs returned
-
-#  look for notes file as $PROJECT.md - anywhere
-
-#  not being able to add multiple projects in org_add
+org-help() {
+  echo "org-add TASK PROJECTS"
+  echo "org-show PROJECT"
+}
 
 org-add() {
 	TASK=$1
@@ -15,6 +12,14 @@ org-add() {
   do
     org-add-single-project "$TASK" "$PROJECT"
    done
+}
+
+org-show() {
+	if [[ -z "$1" ]]; then
+    org-show-projects
+  else
+    org-show-project $1
+fi
 }
 
 org-add-single-project() {
@@ -55,14 +60,6 @@ org-add-single-project() {
   echo ""
 }
 
-org-show() {
-	if [[ -z "$1" ]]; then
-    org-show-projects
-  else
-    org-show-project $1
-fi
-}
-
 org-show-project() {
 	PROJECT=$1
 
@@ -81,8 +78,6 @@ org-show-project() {
       cat $FILENAME
   fi
   done
-
-
 }
 
 org-show-projects() {
