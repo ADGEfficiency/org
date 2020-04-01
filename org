@@ -1,86 +1,35 @@
 #!/usr/bin/env bash
 
+declare -a homes=(
+"$HOME/git/$PROJECT/todo.md"
+"$HOME/git/mono/$PROJECT/todo.md"
+"$HOME/git/personal/projects/$PROJECT/todo.md"
+"$HOME/git/personal/projects/${PROJECT}.md"
+)
+
 org-help() {
-  echo "org-add TASK PROJECTS"
-  echo "org-show PROJECT"
+  echo "org-find $PROJECT for a specific project"
+  echo "org-show for all projects"
 }
 
-org-add() {
-	TASK=$1
-  shift
-  for PROJECT in "$@"
-  do
-    org-add-single-project "$TASK" "$PROJECT"
-   done
-}
 
-org-show() {
-	if [[ -z "$1" ]]; then
-    org-show-projects
-  else
-    org-show-project $1
-fi
-}
-
-org-add-single-project() {
-	TASK=$1
-	PROJECT=$2
-
-  #  hardcoded!
-  declare -a arr=(
-  "$HOME/git/$PROJECT/todo.md"
-  "$HOME/git/mono/$PROJECT/todo.md"
-  "$HOME/git/personal/projects/$PROJECT/todo.md"
-  "$HOME/git/personal/projects/${PROJECT}.md"
-  )
+org-find() {
+  #  finds a single project todo.txt
+  PROJECT=$1
 
   WROTEFILE="false"
-  for FILENAME in "${arr[@]}"
+  for FILENAME in "${homes[@]}"
     do
     if [[ ! -f "$FILENAME" ]]; then
       :  # pass
     else
-      echo "found $FILENAME"
-      echo $TASK >> $FILENAME
-      WROTEFILE="true"
+      echo $FILENAME
       break
   fi
   done
-
-  if [[ "$WROTEFILE" == "false" ]]; then
-    echo "no todo found - making at $FILENAME"
-    touch $FILENAME
-    echo $TASK >> $FILENAME
-    WROTEFILE="true"
-  fi
-  echo ""
-  echo "$PROJECT tasks - $FILENAME"
-  echo "-----"
-  cat $FILENAME
-  echo ""
 }
 
-org-show-project() {
-	PROJECT=$1
-
-  declare -a arr=(
-  "$HOME/git/$PROJECT/todo.md"
-  "$HOME/git/mono/$PROJECT/todo.md"
-  "$HOME/git/personal/projects/$PROJECT/todo.md"
-  "$HOME/git/personal/projects/${PROJECT}.md"
-  )
-
-  for FILENAME in "${arr[@]}"
-    do
-    if [[ ! -f "$FILENAME" ]]; then
-      :  # pass
-    else
-      cat $FILENAME
-  fi
-  done
-}
-
-org-show-projects() {
+org-show() {
   #  look for all todo.md files in home
   echo "finding project todo.md's ..."
   PROJECTS=$(find /Users/adam/git -name "todo.md" | awk -F "/" '{print $(NF-1)}' | sort)
